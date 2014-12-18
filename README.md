@@ -17,4 +17,4 @@ Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
 
 [1]: http://www.w3.org/TR/webaudio/ "Web Audio API"
-[2]: tree/master/examples          "Example web-audio projects"
+[2]: https://github.com/triss/web-audio-cljs/tree/master/examples "Example web-audio projects"
