@@ -1,6 +1,6 @@
 (defproject web-audio "0.1.0-SNAPSHOT"
   :description "Low level WebAudio wrapper"
-  :url "http://example.com/FIXME"
+  :url "https://github.com/triss/web-audio-cljs"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
