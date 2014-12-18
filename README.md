@@ -1,8 +1,9 @@
 # web-audio
 
-A ClojureScript library designed to ease development with the [WebAudio API][1].
+A ClojureScript library that wraps the [WebAudio API][1].
 
-It provides low-level wrappers around all of the methods and objects contained in the [WebAudio specification][1].
+It provides low-level wrappers around all of the methods and objects contained
+in the [WebAudio specification][1].
 
 ## Usage
 
