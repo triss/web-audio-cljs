@@ -200,6 +200,8 @@
 
   (cancel-scheduled-events [p t] (.cancelScheduledEvents p t)))
 
+(defn set! [node param value]
+  (aset node (name param) value))
 
 (defn create-oscillator               
   "OscillatorNode represents an audio source generating a periodic waveform. It
