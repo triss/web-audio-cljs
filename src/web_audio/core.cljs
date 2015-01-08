@@ -104,6 +104,14 @@
 
   (connect-context-destination [n] "Connects node to its contexts destination"))
 
+; FIXME: Should be part of OutputsSignal
+; TODO: Disconnect all
+;       Channel numbers
+(defn connect-all [all] 
+  "Connect's audio nodes in series."
+  (mapv (fn [[a b]] (.connect a b)) 
+        (partition 2 1 all))) 
+
 (extend-protocol OutputsSignal 
   js/AudioNode 
   (connect    [a b] (.connect a b))
@@ -150,14 +158,16 @@
   js/AudioBufferSourceNode
   start
   stop
+
   js/OscillatorNode 
   start
   stop)
 
-
+; REVIEW: Really should be applied to nodes?
 (defprotocol Automatable
   "Unifies operations of automatable objects such as AudioParams."
 
+  ; REVIEW: Currently the same as WA... idiomatacness, naming
   (set-value [param value]
     "Set's a paramater's value")
 
@@ -200,16 +210,19 @@
 
   (cancel-scheduled-events [p t] (.cancelScheduledEvents p t)))
 
-(defn set! [node param value]
-  (aset node (name param) value))
+;;;; FIXME: move to more pleasant location in source file.
+;;;; REVIEW: do I really like the name. Args differ to js interop set!
+(defn set-param! [node param value]
+  (aset node 
+        (name param) 
+        (if (keyword? value) (name value) value)))
+
 
 (defn create-oscillator               
   "OscillatorNode represents an audio source generating a periodic waveform. It
   can be set to a few commonly used waveforms. Additionally, it can be set to
   an arbitrary periodic waveform through the use of set-periodic-wave."
   [ctx] (.createOscillator ctx)) 
-
-(defn type [osc] (.-type osc))
 
 
 ;;;; Buffers
@@ -218,13 +231,13 @@
   (.create-buffer ctx channels length sample-rate))
 
 (defn decode-audio-data
-  "Decodes audio data from an array buffer to something anaudio buffer can use
+  "Decodes audio data from an array buffer to something an audio buffer can use
   and passes it on to success call back."
   ([ctx data success-callback] 
-   (.decode-audio-data ctx data success-callback))
+   (.decodeAudioData ctx data success-callback))
 
   ([ctx data success-callback error-callback] 
-   (.decode-audio-data ctx data success-callback error-callback)))
+   (.decodeAudioData ctx data success-callback error-callback)))
 
 
 ;;;; Periodic Waves
