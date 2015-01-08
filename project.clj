@@ -22,6 +22,14 @@
                           :output-dir    "examples/hello-world/out"
                           :source-map    true
                           :optimizations :none}}
+
+                       {:id mixing-example
+                        :source-paths ["src" "examples/mixing/src"]
+                        :compiler {
+                          :output-to     "examples/mixing/main.js"
+                          :output-dir    "examples/mixing/out"
+                          :source-map    true
+                          :optimizations :none}}
                        
                        {:id sawtooth-example
                         :source-paths ["src" "examples/sawtooth/src"]
