@@ -99,8 +99,8 @@
   "Unifies operations on things that output audio."
 
   ; TODO: Allow users to specify output/input numbers
-  (connect    [a b]  "Connects a to b.")
-  (disconnect [a b]  "Disconnects a and b.")
+  (connect    [a b]  "Connects a's output to b's input.")
+  (disconnect [a b]  "Disconnects a's output from b's input.")
 
   (connect-context-destination [n] "Connects node to its contexts destination"))
 
@@ -114,6 +114,12 @@
 
 (extend-protocol OutputsSignal 
   js/AudioNode 
+  (connect    [a b] (.connect a b))
+  (disconnect [a b] (.disconnect a b))
+
+  (connect-context-destination [n] (.connect n (.-destination (ctx-for n))))
+  
+  js/AudioDestinationNode
   (connect    [a b] (.connect a b))
   (disconnect [a b] (.disconnect a b))
 
@@ -145,14 +151,14 @@
     "Stops a sound source immediately or at time t if specified."))
 
 (defn start
-  ([node]                   (.start node 0))
-  ([node t]                 (.start node t))
-  ([node t offset]          (.start node t offset))
-  ([node t offset duration] (.start node t offset duration)))
+  ([node]                   (.start node 0) node)
+  ([node t]                 (.start node t) node)
+  ([node t offset]          (.start node t offset) node)
+  ([node t offset duration] (.start node t offset duration) node))
 
 (defn stop 
-  ([node]   (.stop node 0))
-  ([node t] (.stop node t)))
+  ([node]   (.stop node 0) node)
+  ([node t] (.stop node t) node))
 
 (extend-protocol GeneratesSignal
   js/AudioBufferSourceNode
@@ -210,11 +216,17 @@
 
   (cancel-scheduled-events [p t] (.cancelScheduledEvents p t)))
 
+(defn get-param [node param-name]
+  (aget node (name param-name)))
+
+(defn set-param! [node param value]
+  (set-value (get-param node param) value))
+
 ;;;; FIXME: move to more pleasant location in source file.
 ;;;; REVIEW: do I really like the name. Args differ to js interop set!
-(defn set-param! [node param value]
+(defn set-attr! [node attr value]
   (aset node 
-        (name param) 
+        (name attr) 
         (if (keyword? value) (name value) value)))
 
 
